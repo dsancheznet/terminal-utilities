@@ -7,7 +7,7 @@
 # Attributes  : ugo+x
 # Destination : /usr/local/bin
 # TODO        : · Show some progress while playing the video
-
+clear
 echo " ████████ ██    ██ ██████  ███████       ██████  ██       █████  ██    ██" 
 echo "    ██    ██    ██ ██   ██ ██            ██   ██ ██      ██   ██  ██  ██ " 
 echo "    ██    ██    ██ ██████  █████   █████ ██████  ██      ███████   ████  " 

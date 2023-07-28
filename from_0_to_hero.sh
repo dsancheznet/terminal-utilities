@@ -3,7 +3,7 @@
 # BSPWM Installtion Script Written by D.Sánchez
 
 sudo apt update && sudo apt upgrade -y
-sudo apt install picom nitrogen bspwm sxhkd polybar dunst unzip unrar-free plymouth plymouth-theme-breeze plymouth-themes desktop-base xinit terminator python3-virtualenv python3-venv flatpak dunst mlocate psmisc gnupg git yt-dlp lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings imagemagick pulseaudio maim
+sudo apt install picom nitrogen bspwm sxhkd polybar dunst unzip unrar-free plymouth plymouth-theme-breeze plymouth-themes desktop-base xinit terminator python3-virtualenv python3-venv flatpak mlocate psmisc gnupg git yt-dlp lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings imagemagick pulseaudio alsa-utils maim
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 flatpak install firefox
 flatpak install flatseal

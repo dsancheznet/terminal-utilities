@@ -6,7 +6,8 @@ echo "|   __|  |  | | | | | |    |-   -| | | |__   | | | |     |  |__|  |__|   _
 echo "|__|  |_____|_|___| |_|    |_____|_|___|_____| |_| |__|__|_____|_____|_____|__|__|"
 echo " Written by D.Sánchez 2023."
 
-# Create temporary directory
+# Create font and temporary directory
+mkdir -p ~/.local/share/fonts/
 mkdir ./tmp
 
 # Change to directory
@@ -41,7 +42,7 @@ wget --no-check-certificate --directory-prefix=~/.local/share/fonts/ "https://gi
 wget --no-check-certificate --directory-prefix=~/.local/share/fonts/ "https://github.com/AppleDesignResources/SanFranciscoFont/raw/master/SanFranciscoText-SemiboldItalic.otf"
 
 # Extract all otf and ttf files to local font directory
-for F in *.zip; do unzip $F "*.[oOtT][tT][fF]" -d .local/share/fonts/; done
+for F in *.zip; do unzip $F "*.[oOtT][tT][fF]" -d ~/.local/share/fonts/; done
 
 # Exit temporary directory
 cd ..

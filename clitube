@@ -1,0 +1,89 @@
+#!/bin/bash
+
+#Set the internal feld separator to \n
+IFS=$'\n'
+
+#Define the temporary results file
+RESULTS='/tmp/results.tmp'
+
+#Define the maximum search results per page ( this depends on the screensize )
+SEARCHITEMS="14"
+
+#Do we have an old result file?
+if [ -f "$RESULTS" ]; then
+    #YES - Well, then delete it.
+    rm $RESULTS
+fi
+
+#Create an empty result file
+touch $RESULTS
+
+#Welcome Screen
+whiptail --title "Welcome" --msgbox " ░▒▓██████▓▒░░▒▓█▓▒░      ░▒▓█▓▒░▒▓████████▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓███████▓▒░░▒▓████████▓▒░\n░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░  ░▒▓█▓▒░   ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░       \n░▒▓█▓▒░      ░▒▓█▓▒░      ░▒▓█▓▒░  ░▒▓█▓▒░   ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░       \n░▒▓█▓▒░      ░▒▓█▓▒░      ░▒▓█▓▒░  ░▒▓█▓▒░   ░▒▓█▓▒░░▒▓█▓▒░▒▓███████▓▒░░▒▓██████▓▒░  \n░▒▓█▓▒░      ░▒▓█▓▒░      ░▒▓█▓▒░  ░▒▓█▓▒░   ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░       \n░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░  ░▒▓█▓▒░   ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░       \n ░▒▓██████▓▒░░▒▓████████▓▒░▒▓█▓▒░  ░▒▓█▓▒░    ░▒▓██████▓▒░░▒▓███████▓▒░░▒▓████████▓▒░\n\n Written by D.Sánchez (c)2024" 15 89
+
+#
+# Functions for different features
+#
+
+function search_main_loop () { # Youtube search
+    # Ask for the search term
+    SEARCHTERM=$(whiptail --inputbox "Please provide a term to search for:" 8 89 --title "Search..." 3>&1 1>&2 2>&3)
+
+    # Is the searchterm empty
+    if [[ $SEARCHTERM == "" ]]; then
+	#YES - Then stop the script - TODO: Will have to modify this when new functions arrive.
+        exit 0
+    fi
+    # Launch a youtube search in the background for the search term
+    yt-dlp ytsearch$SEARCHITEMS:"$SEARCHTERM" --print "%(id)s (%(duration>%H:%M:%S)s) %(title)s%(13)c" >> $RESULTS &
+    { # This block measures the percentage of the downloaded data ( since this is asynchronically ) 
+	# Create a variable to hold the last acknowledged percentage
+	OLDY=""
+	# Create a variable to hold the actual percentage
+	ITEMS=""
+	# Loop infinitely
+	while : ; do
+	    # Loop until a new item has been downloaded
+	    until [ "$OLDY" != "$ITEMS" ]
+	    do
+		# Count the items that have been downloaded
+	        ITEMS=`cat /tmp/results.tmp | wc -l`
+	    done
+	    # Set this percentage as acknowledged
+	    OLDY=$ITEMS
+	    # Calculate a numerical percentage
+	    ITEMPERCENTAGE=$(( ITEMS*100/SEARCHITEMS ))
+	    # Send this percentage to whiptail
+	    echo $ITEMPERCENTAGE
+	    # Is the download finished?
+	    if [ "$ITEMS" = "$SEARCHITEMS" ]; then break; fi;#YES - exit the loop
+	done
+    } | whiptail --gauge "Downloading search results..." 6 89 0
+    # Read the results from disk
+    DATA=`cat $RESULTS`
+    # Declar a temporary counter
+    COUNTER=0
+    # Iterate over the DATA
+    for LINE in $DATA; do
+	# Append item to MYARRAY
+        MYARRAY[COUNTER]=$(echo $LINE | grep -o -E "^[a-zA-Z0-9_\-]* ")
+	# Perform first of two steps ( eliminate video id from string )
+        TEMPLINE=${LINE#[a-zA-Z0-9_\-]* }
+	# Perform second step and append the result to the variable
+        MYARRAY[COUNTER+1]=$(echo ${TEMPLINE%NA})
+	# Increment counter by two, since we have appended two items
+        ((COUNTER+=2))
+    done
+    # Define the youtube video the user has selected
+    VIDEO=$(whiptail --menu "Please select a stream..." --title "Search Results" 27 129 19 ${MYARRAY[@]} 3>&1 1>&2 2>&3)
+    # We don't need thes anymore, but we need it to be empty if we decide to have another go
+    unset $MYARRAY
+    # Is the video string empty?
+    if [[ "$VIDEO" != "" ]]; then
+	# NO - Play the video
+	nvlc --no-video "https://www.youtube.com/watch?v=$VIDEO"
+    fi
+}
+
+# Inifite loop until an empty seach string is provided.
+while :;do search_main_loop; done;

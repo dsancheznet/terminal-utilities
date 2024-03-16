@@ -7,14 +7,18 @@
 # Attributes  : ugo+x
 # Destination : /usr/local/bin
 # TODO        : · Show some progress while playing the video
+
 clear
-echo " ████████ ██    ██ ██████  ███████       ██████  ██       █████  ██    ██" 
-echo "    ██    ██    ██ ██   ██ ██            ██   ██ ██      ██   ██  ██  ██ " 
-echo "    ██    ██    ██ ██████  █████   █████ ██████  ██      ███████   ████  " 
-echo "    ██    ██    ██ ██   ██ ██            ██      ██      ██   ██    ██   " 
-echo "    ██     ██████  ██████  ███████       ██      ███████ ██   ██    ██   " 
+
+echo " ████████ ██    ██ ██████  ███████       ██████  ██       █████  ██    ██"
+echo "    ██    ██    ██ ██   ██ ██            ██   ██ ██      ██   ██  ██  ██ "
+echo "    ██    ██    ██ ██████  █████   █████ ██████  ██      ███████   ████  "
+echo "    ██    ██    ██ ██   ██ ██            ██      ██      ██   ██    ██   "
+echo "    ██     ██████  ██████  ███████       ██      ███████ ██   ██    ██   "
 echo " Playing $1"
+
 # This is where the magic happens
 yt-dlp "$1" -f bestaudio -o - 2>/dev/null | ffplay -nodisp -stats -loglevel quiet -autoexit -i -hide_banner - 
+
 # When the video is over, we come back to the command line
 echo " Done."

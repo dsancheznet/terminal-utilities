@@ -1,22 +1,20 @@
 #!/bin/bash
 
-#Set the internal feld separator to \n
+#Set the internal field separator to \n
 IFS=$'\n'
 
-#Define the temporary results file
-RESULTS='/tmp/results.tmp'
-
-#Define the maximum search results per page ( this depends on the screensize )
-SEARCHITEMS="14"
+# Import configurations
+source ~/.clituberc
 
 #Do we have an old result file?
 if [ -f "$RESULTS" ]; then
-    #YES - Well, then delete it.
-    rm $RESULTS
+    #YES - Well, then empty it.
+    : > $RESULTS
+else
+    #Create an empty result file
+    touch $RESULTS
 fi
 
-#Create an empty result file
-touch $RESULTS
 
 #Welcome Screen
 whiptail --title "Welcome" --msgbox " ░▒▓██████▓▒░░▒▓█▓▒░      ░▒▓█▓▒░▒▓████████▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓███████▓▒░░▒▓████████▓▒░\n░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░  ░▒▓█▓▒░   ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░       \n░▒▓█▓▒░      ░▒▓█▓▒░      ░▒▓█▓▒░  ░▒▓█▓▒░   ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░       \n░▒▓█▓▒░      ░▒▓█▓▒░      ░▒▓█▓▒░  ░▒▓█▓▒░   ░▒▓█▓▒░░▒▓█▓▒░▒▓███████▓▒░░▒▓██████▓▒░  \n░▒▓█▓▒░      ░▒▓█▓▒░      ░▒▓█▓▒░  ░▒▓█▓▒░   ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░       \n░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░  ░▒▓█▓▒░   ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░       \n ░▒▓██████▓▒░░▒▓████████▓▒░▒▓█▓▒░  ░▒▓█▓▒░    ░▒▓██████▓▒░░▒▓███████▓▒░░▒▓████████▓▒░\n\n Written by D.Sánchez (c)2024" 15 89
@@ -33,6 +31,9 @@ function search_main_loop () { # Youtube search
     if [[ $SEARCHTERM == "" ]]; then
 	#YES - Then stop the script - TODO: Will have to modify this when new functions arrive.
         exit 0
+    else
+    #NO - Empty the results file
+    	: > $RESULTS
     fi
     # Launch a youtube search in the background for the search term
     yt-dlp ytsearch$SEARCHITEMS:"$SEARCHTERM" --print "%(id)s (%(duration>%H:%M:%S)s) %(title)s%(13)c" >> $RESULTS &
@@ -80,8 +81,11 @@ function search_main_loop () { # Youtube search
     unset $MYARRAY
     # Is the video string empty?
     if [[ "$VIDEO" != "" ]]; then
-	# NO - Play the video
-	nvlc --no-video "https://www.youtube.com/watch?v=$VIDEO"
+    	# NO - Play the video
+        # Since VLC does a not-so-good job extracting the video URL, we need to preprocess the URL with yt-dlp
+        VIDEO=`yt-dlp --get-url --extract-audio -f bestaudio "https://www.youtube.com/watch?v=$VIDEO"`
+        # Play the extracted url - this works well, but looses the video's title ( I guess you can't have it all )
+        eval $PLAYER \"$VIDEO\"
     fi
 }
 

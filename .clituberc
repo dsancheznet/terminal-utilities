@@ -1,0 +1,35 @@
+# contube configuration file, to be placed under the home directory
+# All configurarion options are explained whithin this file.
+
+# Define the temporary file we will use to store the search results
+# Has to be writeable by the user.
+RESULTS='/tmp/results.tmp'
+
+# Define how many items we'd like to retreive at once (more search
+# results increase the time to wait while retrieving the data )
+SEARCHITEMS="12"
+
+# Height of the selection menu
+# Depends on screen size, but 18 is the sweet spot
+MENUHEIGHT=18
+
+# Define the program you'd like to use to reproduce youtube
+# Options:
+# 1) vlc
+#   I use nvlc ( ncurses interface ) to keep everything on the terminal.
+#   If you use vlc, a Window is launched to play the stream/file.
+#   If you want the player to quit after finishing the strem, use the --play-and-exit 
+#   argument.
+#   If you don't want the player to launch a video window, yse the --no-video argument.
+# 2) ffplay
+#   Works fantastically, but does not allow to skip ahead and has to be cancelled 
+#   with CTRL+C to return to the menus.
+YTPLAYER='nvlc --no-video --play-and-exit'
+
+# You can define a different player for radio and youtube. I for myself like to keep
+# them the same.
+RADIOPLAYER=$YTPLAYER
+
+# Define the radio browser API mirror
+APILOCATION="http://de1.api.radio-browser.info/json/stations"
+

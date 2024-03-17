@@ -24,7 +24,13 @@ A few assorted utilities to be used on a command line.
 
 · vlc ( which provides nvlc )
 
+· jq ( allows to extract the json data from radio browser )  
+
 `clitube` allows to search youtube for videos and permits to play them, all from the command line
+
+Installing all neccessary dependencies under Debian is accomplished by
+`sudo apt install jq yt-dlp vlc`
+Note that the non-free repo has to be activated.
 
 ## font_installer.sh
 

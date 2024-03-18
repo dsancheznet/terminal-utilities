@@ -195,14 +195,22 @@ function search_radios () {
 
 # This function searches inside a preconfigured directory
 function play_locally () {
-    
-    echo ""
-
+   # Show a small splash screen
+   TERM=ansi whiptail --infobox "Launching MP3 Player..." 7 28
+   # Depending on the player, it may need a Library Directory
+   # Is such a library path neccessary
+   if [[ $NEEDSLIBRARYPATH == 'YES' ]]; then
+       #YES - Provide the Library Path
+       eval $MUSICPLAYER $LOCALDIRECTORY
+   else
+       #NO - Launch without library path
+       eval $MUSICPLAYER
+   fi
 }
 
 
 # Inifite loop until an empty seach string is provided.
-while :; do
+while : ; do
     # Present the main menu
     MENUITEM=$(whiptail --menu "Please Select" --ok-button "Select" --cancel-button "Quit" --title "Main Menu" 12 69 4 \
         "1" "Search and Play Youtube Videos" \

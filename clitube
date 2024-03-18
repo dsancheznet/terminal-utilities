@@ -8,17 +8,18 @@
 # Published under the EU-GPL        
 # https://github.com/dsancheznet
 #
+
 #Set the internal field separator to \n
 IFS=$'\n'
 
 # Import configurations
 source ~/.clituberc
 
-
 #Welcome Screen
 whiptail --title "Welcome" --msgbox "    ██████╗██╗     ██╗████████╗██╗   ██╗██████╗ ███████╗\n   ██╔════╝██║     ██║╚══██╔══╝██║   ██║██╔══██╗██╔════╝\n   ██║     ██║     ██║   ██║   ██║   ██║██████╔╝█████╗  \n   ██║     ██║     ██║   ██║   ██║   ██║██╔══██╗██╔══╝  \n   ╚██████╗███████╗██║   ██║   ╚██████╔╝██████╔╝███████╗\n    ╚═════╝╚══════╝╚═╝   ╚═╝    ╚═════╝ ╚═════╝ ╚══════╝\n\n    Written by D.Sánchez (c)2024" 14 64
 
-function search_youtube () { # Youtube search
+# Youtube Serch function
+function search_youtube () {
     #Do we have an old result file?
     if [ -f "$RESULTS" ]; then
         #YES - Well, then empty it.
@@ -50,7 +51,7 @@ function search_youtube () { # Youtube search
 	        # Loop until a new item has been downloaded
 	        until [ "$OLDY" != "$ITEMS" ]
 	        do
-	    	# Count the items that have been downloaded
+	    	    # Count the items that have been downloaded
 	            ITEMS=`cat /tmp/results.tmp | wc -l`
 	        done
 	        # Set this percentage as acknowledged
@@ -63,12 +64,13 @@ function search_youtube () { # Youtube search
 	        if [ "$ITEMS" = "$SEARCHITEMS" ]; then break; fi;#YES - exit the loop
 	    done
     } | whiptail --gauge "Downloading search results..." 6 89 0
+    # Now we have the data, let's process it
     while :;do
         # Read the results from disk
         DATA=`cat $RESULTS`
         # Declare a temporary counter
         COUNTER=0
-        # Iterate over the DATA
+        # Iterate over each line of the the DATA
         for LINE in $DATA; do
             # Append item to MYARRAY (this is the video-id)
             MYARRAY[COUNTER]=$(echo $LINE | grep -o -E "^[a-zA-Z0-9_\-]* ")
@@ -76,30 +78,42 @@ function search_youtube () { # Youtube search
             TEMPLINE=${LINE#[a-zA-Z0-9_\-]* }
             # Perform second step (eliminate NA from the ending) 
             TEMPLINE=$(echo ${TEMPLINE%NA})
-            # Perform third step (limit string to 80 chars) and append the result to the variable
+            # Perform third step (limit string to 80 chars) and append the result to the array
             MYARRAY[COUNTER+1]=$(echo ${TEMPLINE:0:80})
-    	    # Increment counter by two, since we have appended two items
+    	    # Increment counter by two, since we have appended two items to the array
             ((COUNTER+=2))
         done
-        # Define the youtube video the user has selected
+        # Let the user select one of the videos
         VIDEO=$(whiptail --menu "Please select a stream..." --title "Search Results" --ok-button "Stream" --cancel-button "Back" $MENUHEIGHT 100 $((MENUHEIGHT-8))  ${MYARRAY[@]} 3>&1 1>&2 2>&3)
         # Did the user cancel?
         if [[ $? == 1 ]]; then
            #YES - Break out of the loop
            break
         fi
-        # We don't need this anymore, but we need it to be empty if we decide to have another go
-
+        # Store the amount of elements contained in the manu array
+        ARRAYLENGTH=${#MYARRAY[@]}
+        # Default title
+        VIDEOTITLE="Default"
+        # Get the video title to provide vlc with ne neccessary data ( a bit hacky, but not passible any other way )
+        for (( COUNTER=0; COUNTER<=$ARRAYLENGTH ;COUNTER+=2)); do
+            # Is this the selected file?
+            if [[ ${MYARRAY[COUNTER]} == $VIDEO  ]]; then
+                #YES - Then save the title
+                VIDEOTITLE=${MYARRAY[COUNTER+1]:11:255}
+            fi
+        done
+        # We don't need this anymore, but we need it to be empty if we decide to give it another go
         unset $MYARRAY
         # Is the video string empty?
         if [[ "$VIDEO" != "" ]]; then
         	# NO - Play the video
             # Since VLC does a not-so-good job extracting the video URL, we need to preprocess the URL with yt-dlp
-            # Show this to the user (note: whiptails infobox does not show under all terminals so we print it twice)
+            # Show this to the user (note: whiptails infobox does not show under all terminals so we need to specifically open an ANSI term)
             TERM=ansi whiptail --infobox "Preparing video URL..." 7 28
             VIDEO=`yt-dlp --get-url --extract-audio -f bestaudio "https://www.youtube.com/watch?v=$VIDEO"`
+            #VIDEO="https://www.youtube.com/watch?v=$VIDEO"
             # Play the extracted url - this works well, but looses the video's title ( I guess you can't have it all )
-            eval $YTPLAYER \"$VIDEO\"
+            eval $YTPLAYER \"$VIDEO\" --meta-title \"$VIDEOTITLE\"
         fi
     done
 }
@@ -117,6 +131,8 @@ function search_radios () {
     TERM=ansi whiptail --infobox "Retrieving radio stations..." 7 32
     # Retrieve data from the radio browser api TODO: Put address into configuration file
     RESULT=`curl -d "limit=50" -s $APILOCATION/$SEARCHTYPE/${SEARCHTERM/ /%20} | jq -S '.[0:50]' | grep -E "\"codec\"|\"bitrate\"|\"country\"|\"name\"|\"url\""`
+    # Prepare an empty array
+    THEARRAY=()
     # Create an array from data
     for LINE in $RESULT; do 
         THEARRAY+=($LINE)
@@ -166,6 +182,8 @@ function search_radios () {
         fi
         # Prepare the index of the URL ( sorry for reutilizing variables here ;)
         URL=`echo ${RADIO:0:2}`
+        # Remove the leading zero ( if not, conversion errors appear )
+        URL=${URL#0}
         # Calculate the arrayindex
         ARRAYINDEX=$((URL*5+4))
         # Extract the real URL from the data
@@ -175,12 +193,21 @@ function search_radios () {
     done
 }
 
+# This function searches inside a preconfigured directory
+function play_locally () {
+    
+    echo ""
+
+}
+
+
 # Inifite loop until an empty seach string is provided.
 while :; do
     # Present the main menu
     MENUITEM=$(whiptail --menu "Please Select" --ok-button "Select" --cancel-button "Quit" --title "Main Menu" 12 69 4 \
-        "1" "Search and Play Youtube Videos (only sound)" \
-        "2" "Select Internet Radio Station" \
+        "1" "Search and Play Youtube Videos" \
+        "2" "Select and Stream Internet Radio" \
+        "3" "Play Local Files from Directory" \
         3>&1 1>&2 2>&3)
     # Did the user select the 'Exit' button?
     if [[ $? == 1 ]]; then
@@ -197,7 +224,10 @@ while :; do
         2) # The Internet Radio Serach Option
            search_radios
         ;;
-
+        
+        3) # Local Play
+           play_locally
+        ;;
         *)
         ;;
     esac

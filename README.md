@@ -1,6 +1,8 @@
 # terminal-utilities
 A few assorted utilities to be used on a command line.
 
+* * * 
+
 ## tube-play
 
 `tube-play` needs a few packets to be installed.
@@ -13,14 +15,15 @@ A few assorted utilities to be used on a command line.
 
 `tube-play` plays the audio track from a youtube link provided as the first argument.
 
+* * * 
 
 ## clitube
 
 ![clitube_logo](media/clitube.png)
 
-`clitube` allows you to swiftly play music from various different sources. I still use my 8 year old celeron laptop to do some of my work and it works perfectly well.
+`clitube` allows you to swiftly play music from various different sources, all from the comment line. I still use my 8 year old celeron laptop to do some of my work and it works perfectly well ( with Linux on it, obviously ;) .
 
-![clitbe_splash](media/ss1_clitube.png)
+![clitube_splash](media/ss1_clitube.png)
 
 You will be able to select from various sources 
 
@@ -42,6 +45,8 @@ The same is possible searching for internet radio stations
 
 ![clitube_local_playback](media/ss6_clitube.png)
 
+Please note, that if you want to see a high resolution cover, you need to install a terminal with _Terminal Grapgics Protoco_ such as `Kitty`. If your terminal does not support it, a ASCII block art image will be displayed.
+
 `clitube` needs the following mandatory packets to be installed.
 
 · whiptail
@@ -53,11 +58,12 @@ The same is possible searching for internet radio stations
 Apart from these packets you need to install the media players you want to use with the script.
 I use `nvlc` ( this is the ncurses version of vlc, contained in the same package ) for youtube and radios and `kew` for local music playback, but you can use anything as long as it is compatible with the stream of file you are playing back. `ffplay` works great for stream playback (but I don't like the lack of a certain GUI ) and `cmus` works great for local music ( I prefer `kew` due to the ability to display covers ). You choose... 
 
-`clitube` allows to search youtube for videos and permits to play them, all from the command line
 
 Installing all neccessary dependencies under Debian is accomplished by
 `sudo apt install jq yt-dlp`
 Note that the non-free repo has to be activated.
+
+* * *
 
 ## embed_icon
 

@@ -36,4 +36,6 @@ Note that the non-free repo has to be activated.
 
 This script installs all neccessary system fonts for the terminal.
 
-## 
+## embed_icon
+
+Is a script to embed svg image data into markdown documents. I use it in Joplin to embed SVG images directly.

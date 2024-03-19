@@ -24,9 +24,10 @@ A few assorted utilities to be used on a command line.
 
 · yt-dlp
 
-· vlc ( which provides nvlc )
-
 · jq ( allows to extract the json data from radio browser )  
+
+apart from these packets you need to install the media players you want to use with the script.
+I use nvlc ( this is the ncurses of vlc ) for youtube and radios and kew for local music playback, but you can use anything as long as it is compatible with the stream of file you are playing back. ffplay works great for stream playback (but I don't like the lack of a certain GUI ) and cmus works great for local music ( I prefr kew due to the ability to display covers ). You choose... 
 
 `clitube` allows to search youtube for videos and permits to play them, all from the command line
 

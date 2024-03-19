@@ -16,6 +16,8 @@ A few assorted utilities to be used on a command line.
 
 ## clitube
 
+![clitube_logo](media/clitube.png)
+
 `clitube` needs the following packets to be installed.
 
 · whiptail

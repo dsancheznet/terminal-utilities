@@ -1,0 +1,23 @@
+#!/usr/bin/python3
+
+from sys import argv
+from urllib import parse
+from subprocess import PIPE, Popen, TimeoutExpired
+
+print('embed Icon script for copying svg data to markdown')
+print('Reading input file '+argv[1])
+
+svg = open(argv[1]).read()
+inlined = ('![svg image](data:image/svg+xml,' + parse.quote(svg) + ')' ).encode('utf8')
+
+print('Data:')
+print(inlined))
+
+    
+try:
+    p = Popen(["xclip", "-selection", "clipboard"], stdin=PIPE, stdout=PIPE)
+    p.communicate(inlined, timeout=0.020)
+except TimeoutExpired:
+    pass
+
+#TODO: Write an argument recognition function and allow to dump the data to the console or copy it to clipboard

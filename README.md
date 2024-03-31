@@ -45,7 +45,7 @@ The same is possible searching for internet radio stations
 
 ![clitube_local_playback](media/ss6_clitube.png)
 
-Please note, that if you want to see a high resolution cover, you need to install a terminal with _Terminal Grapgics Protoco_ such as `Kitty`. If your terminal does not support it, a ASCII block art image will be displayed.
+Please note, that if you want to see a high resolution cover, you need to install a terminal with _Terminal Graphics Protocol_ such as `Kitty`. If your terminal does not support it, a ASCII block art image will be displayed.
 
 `clitube` needs the following mandatory packets to be installed.
 

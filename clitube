@@ -39,7 +39,7 @@ function search_youtube () {
     fi
  
     # Launch a youtube search in the background for the search term
-    yt-dlp ytsearch$SEARCHITEMS:"$SEARCHTERM" --print "%(id)s (%(duration>%H:%M:%S)s) %(title)s%(13)c" >> $RESULTS &
+    yt-dlp --extractor-args youtube:player_client=ios,web ytsearch$SEARCHITEMS:"$SEARCHTERM" --print "%(id)s (%(duration>%H:%M:%S)s) %(title)s%(13)c" >> $RESULTS &
 
     { # This block measures the percentage of the downloaded data ( since this is asynchronically ) 
 	    # Create a variable to hold the last acknowledged percentage
@@ -110,7 +110,7 @@ function search_youtube () {
             # Since VLC does a not-so-good job extracting the video URL, we need to preprocess the URL with yt-dlp
             # Show this to the user (note: whiptails infobox does not show under all terminals so we need to specifically open an ANSI term)
             TERM=ansi whiptail --infobox "Preparing video URL..." 7 28
-            VIDEO=`yt-dlp --get-url --extract-audio -f bestaudio "https://www.youtube.com/watch?v=$VIDEO"`
+            VIDEO=`yt-dlp --extractor-args youtube:player_client=ios,web --get-url --extract-audio -f bestaudio "https://www.youtube.com/watch?v=$VIDEO"`
             #VIDEO="https://www.youtube.com/watch?v=$VIDEO"
             # Play the extracted url - this works well, but looses the video's title ( I guess you can't have it all )
             eval $YTPLAYER \"$VIDEO\" --meta-title \"$VIDEOTITLE\"

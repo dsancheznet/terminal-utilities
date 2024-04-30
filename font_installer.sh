@@ -55,3 +55,7 @@ rm -rf ./tmp
 
 #Install fonts
 fc-cache -f -v
+
+#Configure Gnome Fonts
+gsettings set org.gnome.desktop.interface font-name 'San Francisco Text 12'
+gsettings set org.gnome.desktop.interface monospace-font-name 'Iosevka Nerd Font 14'

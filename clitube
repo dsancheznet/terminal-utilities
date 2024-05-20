@@ -73,7 +73,7 @@ function search_youtube () {
         # Iterate over each line of the the DATA
         for LINE in $DATA; do
             # Append item to MYARRAY (this is the video-id)
-            MYARRAY[COUNTER]="$(echo $LINE | grep -o -E '^[a-zA-Z0-9_\-]* ')"
+            MYARRAY[COUNTER]=" $(echo $LINE | grep -o -E '^[a-zA-Z0-9_\-]* ')"
     	    # Perform first of three steps ( eliminate video id from string )
             TEMPLINE=${LINE#[a-zA-Z0-9_\-]* }
             # Perform second step (eliminate NA from the ending) 

@@ -13,6 +13,7 @@ echo "│  Script by                │"
 echo "│           D.Sánchez 2023  │"
 echo "└───────────┈┈┈┈────────────┘ "
 
+# Product: https://www.tbsdtv.com/products/tbs6522h-multi-standard-quad-tuner-pci-e-card.html
 # Please consult https://linuxtv.org/wiki/index.php/TBS_driver_installation for details
 # The current user has to have sudo privileges for this script wto work
 # Start in our homedirectory

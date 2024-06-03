@@ -20,8 +20,3 @@ curl -1sLf   'https://dl.cloudsmith.io/public/tvheadend/tvheadend/setup.deb.sh' 
 
 # Install Jellyfin ( will be available on port 8096 once rebooted )
 curl https://repo.jellyfin.org/install-debuntu.sh | sudo bash
-
-# Install recent neovim release
-wget "https://github.com/neovim/neovim/releases/download/v0.9.1/nvim.appimage"
-chmod ugo+x ./nvim.appimage
-mv ./nvim.appimage /usr/local/bin/nvim

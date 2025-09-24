@@ -46,6 +46,10 @@ wget --no-check-certificate "https://use.fontawesome.com/releases/v6.4.0/fontawe
 
 # dafont downloads
 # --content-disposition option to be activated
+wget --content-disposition https://dl.dafont.com/dl/?f=upheaval
+wget --content-disposition https://dl.dafont.com/dl/?f=planet_kosmos
+wget --content-disposition https://dl.dafont.com/dl/?f=cubic
+
 
 # Extract all otf and ttf files to local font directory
 for F in *.zip; do unzip $F "*.[oOtT][tT][fF]" -d ~/.local/share/fonts/; rm $F; done

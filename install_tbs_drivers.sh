@@ -40,6 +40,7 @@ sudo make install
 # Remove downloaded source code
 cd ~
 rm -rf tbsdriver
+rm tbs-tuner-firmwares*
 
 # Reboot to activate the driver
 sudo reboot

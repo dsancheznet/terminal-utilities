@@ -28,3 +28,6 @@ sudo apt install tvheadend
 # Install TBS Drivers
 echo "Installing and compiling tbs drivers"
 curl "https://raw.githubusercontent.com/dsancheznet/terminal-utilities/refs/heads/main/install_tbs_drivers.sh" | sudo bash
+
+# TODO Activate WOL
+# For now, refer to https://adictosalinux.com/habilitar-wake-on-lan-linux/
